@@ -1,17 +1,21 @@
 @import url('https://fonts.googleapis.com/css?family=Eater&display=swap');
 
-*  {
+* {
     box-sizing: border-box;
 }
 
 body {
     width: 100vw;
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
+    align-items: center;
     background-color: #7349AC;
+    flex-direction: column;
+    overflow-x: hidden;
 }
 
+#letters,
 .letters {
     font-family: 'Eater', cursive;
     font-size: 3em;
@@ -19,6 +23,14 @@ body {
     color: #fa6701;
     animation: flicker 5s linear infinite;
 }
+
+#letters {
+    text-decoration: line-through;
+    color: black;
+    animation: none;
+}
+
+
 
 .wrapper {
     max-width: 1000px;
@@ -29,22 +41,57 @@ body {
     flex-direction: column;
 }
 
-.wrapper figure svg > * {
+.wrapper figure svg>* {
     opacity: 0;
 }
 
-.wrapper figure svg #ground             { opacity: 1; }
-.wrapper figure.scaffold svg #scaffold  { opacity: 1; }
-.wrapper figure.head     svg #head      { opacity: 1; }
-.wrapper figure.body     svg #body      { opacity: 1; }
-.wrapper figure.arms     svg #arms      { opacity: 1; }
-.wrapper figure.legs     svg #legs      { opacity: 1; }
+.wrapper figure svg #ground {
+    opacity: 1;
+
+}
+
+.wrapper figure.scaffold svg #scaffold {
+    opacity: 1;
+    transition: opacity 1s;
+
+}
+
+.wrapper figure.head svg #head {
+    opacity: 1;
+    transition: opacity 1s;
+
+}
+
+.wrapper figure.body svg #body {
+    opacity: 1;
+    transition: opacity 1s;
+
+}
+
+.wrapper figure.arms svg #arms {
+    opacity: 1;
+    transition: opacity 1s;
+
+}
+
+.wrapper figure.legs svg #legs {
+    opacity: 1;
+    transition: opacity 1s;
+
+}
+
+
+#letters {
+    display: flex;
+    gap: 0.5rem;
+}
 
 #boxes {
     display: flex;
     flex-direction: row;
     justify-content: center;
     gap: 10px;
+    margin-top: 20px;
 }
 
 #boxes div {
@@ -53,6 +100,9 @@ body {
     border-bottom: 2px solid black;
     width: 50px;
     height: 50px;
+    text-align: center;
+    font-family: 'Eater', cursive;
+    color: white;
 }
 
 .ghost {
@@ -60,7 +110,7 @@ body {
     width: 160px;
     height: 200px;
 }
-  
+
 .ghost-body {
     position: relative;
     width: 160px;
@@ -85,7 +135,8 @@ body {
     flex-wrap: wrap;
 }
 
-.left-eye, .right-eye {
+.left-eye,
+.right-eye {
     width: 20px;
     height: 20px;
     border-radius: 100%;
@@ -101,7 +152,8 @@ body {
     margin-top: 0.2rem;
 }
 
-.left-arm, .right-arm {
+.left-arm,
+.right-arm {
     width: 80px;
     height: 40px;
     background-color: #f2f2f2;
@@ -123,7 +175,7 @@ body {
     position: absolute;
     right: 0;
 }
-  
+
 .feet {
     display: flex;
     position: absolute;
@@ -131,8 +183,9 @@ body {
     right: -1px;
     bottom: -2rem;
 }
-  
-.feet div, .feet div:nth-child(2n) {
+
+.feet div,
+.feet div:nth-child(2n) {
     position: relative;
     flex-grow: 1;
     height: 28px;
@@ -140,13 +193,13 @@ body {
     border-radius: 100%;
     top: -14px;
 }
-  
+
 .feet div:nth-child(2n) {
     border-top: 5px solid #f2f2f2;
     background-color: transparent;
     margin: 3px -4px;
     top: -5px;
-    border-color:#7349AC;
+    border-color: #7349AC;
 }
 
 .shadow {
@@ -158,6 +211,43 @@ body {
     border-radius: 100%;
     background-color: #000000;
     animation: movingShadow 4s ease infinite;
+}
+
+.popup {
+    position: absolute;
+    width: 100vw;
+    min-height: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 10000;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.popup h2 {
+    color: white;
+    font-size: 1.6rem;
+}
+
+button {
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+    font-family: 'Eater', cursive;
+    background-color: orange;
+}
+
+button:hover {
+    background-color: black;
+    color: orange;
+}
+
+.hide {
+    display: none;
 }
 
 @keyframes float {
@@ -175,7 +265,10 @@ body {
 }
 
 @keyframes wave {
-    0%, 20%, 100% {
+
+    0%,
+    20%,
+    100% {
         transform: rotate(50deg);
     }
 
@@ -185,23 +278,31 @@ body {
 }
 
 @keyframes movingShadow {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
     }
+
     50% {
         transform: scale(0.5);
     }
 }
 
 @keyframes flicker {
-	0%, 10%, 20% {
-		text-shadow: none;
+
+    0%,
+    10%,
+    20% {
+        text-shadow: none;
         color: #fa6701;
-	}
-	5%, 15% {
-		text-shadow: 0 0 8px rgba(#fa6701,0.6);
+    }
+
+    5%,
+    15% {
+        text-shadow: 0 0 8px rgba(#fa6701, 0.6);
         color: #111111;
-	}
+    }
 }
 
 
@@ -216,5 +317,4 @@ body {
     }
 }
 
-@media only screen and (max-width: 768px) {
-}
+@media only screen and (max-width: 768px) {}

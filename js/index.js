@@ -1,9 +1,11 @@
 //  För att toggla SVG:en
-/* document.querySelector('figure').classList.add('scaffold');
-document.querySelector('figure').classList.add('head');
-document.querySelector('figure').classList.add('body');
-document.querySelector('figure').classList.add('arms');
-document.querySelector('figure').classList.add('legs'); */
+
+const figure = document.querySelector('figure');
+const resetbutton = document.querySelector('button');
+const mainContent = document.querySelector('main');
+const popup = document.querySelector('.popup');
+
+let hangman = ['scaffold', 'head', 'body', 'arms', 'legs'];
 
 let words = [
   'glad',
@@ -17,24 +19,33 @@ let words = [
   'psytrance',
 ];
 
-let currentWord = '';
+let currentWord = [];
 let currentGuessed = [];
 
-
 function keyboardInput() {
-  console.log(currentWord);
   window.addEventListener('keypress', (e) => {
     if (!currentGuessed.includes(e.key)) {
       currentGuessed.push(e.key);
       drawLetter(e.key);
-      if (currentWord.includes(e.key)) {
-        let currentWordIndex = [...currentWord];
-        currentWordIndex.forEach((letter, index) => {
-          if(letter === e.key) {
-            document.querySelector(`[data-word-index='${index}']`).innerHTML = letter
-          }
-        })
 
+      if (currentWord.includes(e.key)) {
+        currentWord.forEach((letter, index) => {
+          if (letter === e.key) {
+            document.querySelector(`[data-word-index='${index}']`).innerHTML =
+              letter;
+          }
+        });
+      } else {
+        const bodyPart = hangman.shift();
+        figure.classList.add(bodyPart);
+        if (hangman.length === 0) {
+          setTimeout(() => {
+            popup.querySelector('h2').innerHTML = 'Du förlorade!';
+            mainContent.classList.toggle('hide');
+            popup.classList.toggle('hide');
+            popup.style.background = 'darkred';
+          }, 2000);
+        }
       }
     }
   });
@@ -42,9 +53,10 @@ function keyboardInput() {
 
 function randomizeWord() {
   const index = Math.floor(Math.random() * words.length);
-  currentWord = words[index];
+  currentWord = [...words[index]];
   words.splice(index, 1);
   drawBoxes();
+  console.log(currentWord);
 }
 
 function drawBoxes() {
@@ -58,11 +70,35 @@ function drawBoxes() {
   }
 }
 
+function deleteElements(parent, child) {
+  const elements = document.querySelectorAll(`#${parent} ${child}`);
+  elements.forEach((element) => {
+    element.remove();
+  });
+}
+
 function drawLetter(guessedLetter) {
   const letters = document.querySelector('#letters');
   const letter = document.createElement('span');
   letter.innerHTML = guessedLetter;
   letters.append(letter);
+}
+
+resetbutton.addEventListener('click', () => {
+  resetGame();
+  mainContent.classList.toggle('hide');
+  popup.classList.toggle('hide');
+});
+
+function resetGame() {
+  console.log('du förlorade');
+  hangman = ['scaffold', 'head', 'body', 'arms', 'legs'];
+  figure.className = '';
+  currentGuessed = [];
+  currentWord = [];
+  deleteElements('boxes', 'div');
+  deleteElements('letters', 'span');
+  randomizeWord();
 }
 
 function main() {

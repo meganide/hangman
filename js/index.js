@@ -4,6 +4,7 @@ const figure = document.querySelector('figure');
 const resetbutton = document.querySelector('button');
 const mainContent = document.querySelector('main');
 const popup = document.querySelector('.popup');
+let countInterval;
 
 let hangman = ['scaffold', 'head', 'body', 'arms', 'legs'];
 
@@ -17,38 +18,73 @@ let words = [
   'snoop',
   'rapp',
   'psytrance',
+  'flaggstång',
+  'transkibera',
+  'absorbera',
+  'antagonist',
 ];
 
 let currentWord = [];
 let currentGuessed = [];
 
-function keyboardInput() {
-  window.addEventListener('keypress', (e) => {
-    if (!currentGuessed.includes(e.key)) {
-      currentGuessed.push(e.key);
-      drawLetter(e.key);
+window.addEventListener('keypress', onKeyPress);
 
-      if (currentWord.includes(e.key)) {
-        currentWord.forEach((letter, index) => {
-          if (letter === e.key) {
-            document.querySelector(`[data-word-index='${index}']`).innerHTML =
-              letter;
+function onKeyPress(e) {
+  if (!currentGuessed.includes(e.key)) {
+    currentGuessed.push(e.key);
+    if (currentGuessed.length === 1) {
+      startCounter();
+    }
+    drawLetter(e.key);
+    console.log(currentGuessed);
+
+    if (currentWord.includes(e.key)) {
+      currentWord.forEach((letter, index) => {
+        if (letter === e.key) {
+          document.querySelector(`[data-word-index='${index}']`).innerHTML =
+            letter;
+
+          let allCorrect = [];
+          currentWord.forEach((char) => {
+            const bool = currentGuessed.includes(char);
+            allCorrect.push(bool);
+          });
+          if (!allCorrect.includes(false)) {
+            popupScreen('Du vann!', 'darkgreen');
           }
-        });
-      } else {
-        const bodyPart = hangman.shift();
-        figure.classList.add(bodyPart);
-        if (hangman.length === 0) {
-          setTimeout(() => {
-            popup.querySelector('h2').innerHTML = 'Du förlorade!';
-            mainContent.classList.toggle('hide');
-            popup.classList.toggle('hide');
-            popup.style.background = 'darkred';
-          }, 2000);
         }
+      });
+    } else {
+      const bodyPart = hangman.shift();
+      figure.classList.add(bodyPart);
+      if (hangman.length === 0) {
+        popupScreen(
+          `Du förlorade! </br> Korrekt ord var: ${currentWord.join('')}`,
+          'darkred'
+        );
       }
     }
-  });
+  }
+}
+
+let time = 60;
+
+
+
+function startCounter() {
+  countInterval = setInterval(counter, 1000);
+}
+
+function counter() {
+  time--;
+  document.getElementById('counter').innerHTML = time;
+
+  if (time === 0) {
+    popupScreen(
+      `Tiden gick ut! </br> Korrekt ord var: ${currentWord.join('')}`,
+      'darkred'
+    );
+  }
 }
 
 function randomizeWord() {
@@ -84,10 +120,22 @@ function drawLetter(guessedLetter) {
   letters.append(letter);
 }
 
-resetbutton.addEventListener('click', () => {
-  resetGame();
+function popupScreen(text, color) {
+  document.getElementById('counter').innerHTML = "";
+  clearInterval(countInterval);
+  window.removeEventListener('keypress', onKeyPress);
+  popup.querySelector('h2').innerHTML = text;
   mainContent.classList.toggle('hide');
   popup.classList.toggle('hide');
+  popup.style.background = color;
+}
+
+resetbutton.addEventListener('click', () => {
+  resetGame();
+  window.addEventListener('keypress', onKeyPress);
+  mainContent.classList.toggle('hide');
+  popup.classList.toggle('hide');
+  time = 60;
 });
 
 function resetGame() {
@@ -101,9 +149,4 @@ function resetGame() {
   randomizeWord();
 }
 
-function main() {
-  randomizeWord();
-  keyboardInput();
-}
-
-main();
+randomizeWord();

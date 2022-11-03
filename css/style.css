@@ -250,6 +250,17 @@ button:hover {
     display: none;
 }
 
+#counter {
+    position: fixed;
+    top: 2rem;
+    right: 2rem;
+    font-size: 2rem;
+    background-color: rgb(43, 43, 43);
+    color: white;
+    padding: 0.5rem;
+    border-radius: 10px;
+}
+
 @keyframes float {
     0% {
         top: 0px;
